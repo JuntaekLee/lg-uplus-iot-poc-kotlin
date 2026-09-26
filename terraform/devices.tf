@@ -14,7 +14,7 @@ locals {
     mood_light = {
       suffix       = "mood-light-01"
       device_type  = "mood-light"
-      display_name = "무드등"
+      display_name = "조명"
       room         = "안방"
     }
     aircon = {

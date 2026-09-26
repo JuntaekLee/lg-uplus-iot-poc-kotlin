@@ -163,7 +163,7 @@
       </div>
       <div class="scene-body">
         <div class="scene-title">잠들기 전에</div>
-        <div class="scene-sub">무드등 끄기 · 에어컨 취침모드 · 대기전력 차단</div>
+        <div class="scene-sub">조명 끄기 · 에어컨 취침모드 · 대기전력 차단</div>
       </div>
       <button id="scene-run-sleep" class="scene-run" onclick="runSceneSleep()">실행하기</button>
     </div>
@@ -173,7 +173,7 @@
       </div>
       <div class="scene-body">
         <div class="scene-title">기상하고 나서</div>
-        <div class="scene-sub">무드등 끄기 · 에어컨 끄기 · 대기전력 재개</div>
+        <div class="scene-sub">조명 켜기 · 에어컨 끄기 · 대기전력 재개</div>
       </div>
       <button id="scene-run-morning" class="scene-run" onclick="runSceneMorning()">실행하기</button>
     </div>
@@ -188,9 +188,9 @@
           <div class="device-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E5A7E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.472V15a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.528A6 6 0 0 0 12 2z"/></svg>
           </div>
-          <button class="toggle" data-device="mood_light" aria-label="무드등 전원" aria-pressed="false" onclick="toggleDevice('mood_light')"><span class="knob"></span></button>
+          <button class="toggle" data-device="mood_light" aria-label="조명 전원" aria-pressed="false" onclick="toggleDevice('mood_light')"><span class="knob"></span></button>
         </div>
-        <div class="device-name" data-name="mood_light">무드등</div>
+        <div class="device-name" data-name="mood_light">조명</div>
         <div class="device-status" data-status="mood_light">-</div>
       </div>
 
@@ -237,8 +237,8 @@ function statusText(alias, reported) {
   if (alias === "smart_plug") {
     return isOn ? "켜짐" : "꺼짐 · 대기전력 차단";
   }
-  // mood_light
-  return isOn ? "켜짐 · 은은하게" : "꺼짐";
+  // mood_light (표시명: 조명)
+  return isOn ? "켜짐" : "꺼짐";
 }
 
 function renderDevice(alias, reported) {
@@ -312,7 +312,7 @@ function runSceneSleep() {
 
 function runSceneMorning() {
   return runScene("scene-run-morning", [
-    ["mood_light", { is_on: false }],
+    ["mood_light", { is_on: true }],
     ["aircon", { is_on: false }],
     ["smart_plug", { is_on: true }],
   ]);

@@ -1,9 +1,9 @@
 # lg-uplus-iot-poc-kotlin
 
 LG유플러스 홈IoT 클라우드 이관 설계(`interview/lg-uplus/migration-plan.md`)의 일부를
-실제 AWS에 구현한 PoC. 스마트플러그·무드등·에어컨 3개 기기를 IoT Core에 등록하고,
-API Gateway + Lambda(Kotlin)로 제어하며, "잠들기 전에" 씬 하나로 세 기기를 한 번에
-제어하는 모바일 웹 데모를 CloudFront로 서빙한다.
+실제 AWS에 구현한 PoC. 스마트플러그·조명·에어컨 3개 기기를 IoT Core에 등록하고,
+API Gateway + Lambda(Kotlin)로 제어하며, "잠들기 전에"·"기상하고 나서" 씬으로 세 기기를
+한 번에 제어하는 모바일 웹 데모를 CloudFront로 서빙한다.
 
 ## 구조
 

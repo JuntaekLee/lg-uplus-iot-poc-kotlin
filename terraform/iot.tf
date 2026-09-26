@@ -1,4 +1,4 @@
-# --- Thing: 시뮬레이션할 기기 3대 (스마트플러그·무드등·에어컨) ---
+# --- Thing: 시뮬레이션할 기기 3대 (스마트플러그·조명·에어컨) ---
 resource "aws_iot_thing" "device" {
   for_each = local.devices
   name     = "${var.project_name}-${each.value.suffix}"
