@@ -1,0 +1,15 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform.lock.hcl
+certs/
+*.pem
+*.key
+lambda/*.zip
+
+# Kotlin/Gradle
+.gradle/
+build/
+*.class
+.kotlin/
