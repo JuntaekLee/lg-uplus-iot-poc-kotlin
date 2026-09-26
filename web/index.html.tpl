@@ -80,6 +80,7 @@
     cursor: pointer;
   }
   .scene-run:disabled { opacity: 0.6; cursor: default; }
+  .scene-card + .scene-card { margin-top: 10px; }
 
   .devices {
     padding: 20px;
@@ -117,7 +118,6 @@
     align-items: flex-start;
     justify-content: space-between;
   }
-  .device-room { font-size: 11px; color: var(--muted); }
   .device-name { font-size: 15px; font-weight: 600; }
   .device-status { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .device-status.on { color: var(--accent); }
@@ -165,7 +165,17 @@
         <div class="scene-title">잠들기 전에</div>
         <div class="scene-sub">무드등 끄기 · 에어컨 취침모드 · 대기전력 차단</div>
       </div>
-      <button id="scene-run" class="scene-run" onclick="runScene()">실행하기</button>
+      <button id="scene-run-sleep" class="scene-run" onclick="runSceneSleep()">실행하기</button>
+    </div>
+    <div class="scene-card">
+      <div class="scene-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E5A7E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="scene-body">
+        <div class="scene-title">기상하고 나서</div>
+        <div class="scene-sub">무드등 끄기 · 에어컨 끄기 · 대기전력 재개</div>
+      </div>
+      <button id="scene-run-morning" class="scene-run" onclick="runSceneMorning()">실행하기</button>
     </div>
   </div>
 
@@ -180,7 +190,6 @@
           </div>
           <button class="toggle" data-device="mood_light" aria-label="무드등 전원" aria-pressed="false" onclick="toggleDevice('mood_light')"><span class="knob"></span></button>
         </div>
-        <div class="device-room" data-room="mood_light">안방</div>
         <div class="device-name" data-name="mood_light">무드등</div>
         <div class="device-status" data-status="mood_light">-</div>
       </div>
@@ -192,7 +201,6 @@
           </div>
           <button class="toggle" data-device="aircon" aria-label="에어컨 전원" aria-pressed="false" onclick="toggleDevice('aircon')"><span class="knob"></span></button>
         </div>
-        <div class="device-room" data-room="aircon">거실</div>
         <div class="device-name" data-name="aircon">에어컨</div>
         <div class="device-status" data-status="aircon">-</div>
       </div>
@@ -202,7 +210,6 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v4M15 2v4M7 8h10l-1 6a4 4 0 0 1-8 0L7 8z"/><path d="M12 18v4"/></svg>
         </div>
         <div class="device-info">
-          <div class="device-room" data-room="smart_plug">서재</div>
           <div class="device-name" data-name="smart_plug">스마트플러그</div>
           <div class="device-status" data-status="smart_plug">-</div>
         </div>
@@ -281,22 +288,34 @@ async function toggleDevice(alias) {
   }
 }
 
-async function runScene() {
-  const btn = document.getElementById("scene-run");
+async function runScene(buttonId, commands) {
+  const btn = document.getElementById(buttonId);
   btn.disabled = true;
   const prevText = btn.textContent;
   btn.textContent = "실행 중...";
   try {
-    await Promise.all([
-      setDevice("mood_light", { is_on: false }),
-      setDevice("aircon", { is_on: true, mode: "sleep", temp_c: 26 }),
-      setDevice("smart_plug", { is_on: false }),
-    ]);
+    await Promise.all(commands.map(([alias, desired]) => setDevice(alias, desired)));
     await refreshAll();
   } finally {
     btn.disabled = false;
     btn.textContent = prevText;
   }
+}
+
+function runSceneSleep() {
+  return runScene("scene-run-sleep", [
+    ["mood_light", { is_on: false }],
+    ["aircon", { is_on: true, mode: "sleep", temp_c: 26 }],
+    ["smart_plug", { is_on: false }],
+  ]);
+}
+
+function runSceneMorning() {
+  return runScene("scene-run-morning", [
+    ["mood_light", { is_on: false }],
+    ["aircon", { is_on: false }],
+    ["smart_plug", { is_on: true }],
+  ]);
 }
 
 refreshAll();
