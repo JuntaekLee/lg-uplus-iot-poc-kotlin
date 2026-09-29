@@ -107,11 +107,23 @@ resource "aws_lambda_function" "get_status" {
   filename         = local.lambda_jar_path
   source_code_hash = local.lambda_jar_hash
   timeout          = 10
-  memory_size      = 512
+  memory_size      = 1769
+  publish          = true
 
   environment {
     variables = local.lambda_env
   }
+
+  snap_start {
+    apply_on = "PublishedVersions"
+  }
+}
+
+# SnapStart는 게시된 버전에서만 동작하므로 API Gateway는 $LATEST 대신 이 alias를 호출한다.
+resource "aws_lambda_alias" "get_status" {
+  name             = "live"
+  function_name    = aws_lambda_function.get_status.function_name
+  function_version = aws_lambda_function.get_status.version
 }
 
 resource "aws_lambda_function" "set_command" {
@@ -122,11 +134,23 @@ resource "aws_lambda_function" "set_command" {
   filename         = local.lambda_jar_path
   source_code_hash = local.lambda_jar_hash
   timeout          = 10
-  memory_size      = 512
+  memory_size      = 1769
+  publish          = true
 
   environment {
     variables = local.lambda_env
   }
+
+  snap_start {
+    apply_on = "PublishedVersions"
+  }
+}
+
+# SnapStart는 게시된 버전에서만 동작하므로 API Gateway는 $LATEST 대신 이 alias를 호출한다.
+resource "aws_lambda_alias" "set_command" {
+  name             = "live"
+  function_name    = aws_lambda_function.set_command.function_name
+  function_version = aws_lambda_function.set_command.version
 }
 
 resource "aws_lambda_function" "virtual_device" {
@@ -137,7 +161,7 @@ resource "aws_lambda_function" "virtual_device" {
   filename         = local.lambda_jar_path
   source_code_hash = local.lambda_jar_hash
   timeout          = 10
-  memory_size      = 512
+  memory_size      = 1769
 
   environment {
     variables = local.lambda_env
@@ -154,7 +178,8 @@ resource "aws_lambda_function" "get_device_metadata" {
   filename         = local.lambda_jar_path
   source_code_hash = local.lambda_jar_hash
   timeout          = 10
-  memory_size      = 512
+  memory_size      = 1769
+  publish          = true
 
   environment {
     variables = {
@@ -170,4 +195,15 @@ resource "aws_lambda_function" "get_device_metadata" {
       })
     }
   }
+
+  snap_start {
+    apply_on = "PublishedVersions"
+  }
+}
+
+# SnapStart는 게시된 버전에서만 동작하므로 API Gateway는 $LATEST 대신 이 alias를 호출한다.
+resource "aws_lambda_alias" "get_device_metadata" {
+  name             = "live"
+  function_name    = aws_lambda_function.get_device_metadata.function_name
+  function_version = aws_lambda_function.get_device_metadata.version
 }

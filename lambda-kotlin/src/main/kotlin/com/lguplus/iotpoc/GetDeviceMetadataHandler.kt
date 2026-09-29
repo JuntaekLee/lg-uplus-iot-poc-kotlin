@@ -2,12 +2,17 @@ package com.lguplus.iotpoc
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient
+import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 import software.amazon.awssdk.services.dynamodb.model.GetItemRequest
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
 
-private val dynamo: DynamoDbClient = DynamoDbClient.builder().build()
+private val dynamo: DynamoDbClient = DynamoDbClient.builder()
+    .region(Region.of(System.getenv("AWS_REGION")))
+    .httpClient(UrlConnectionHttpClient.create())
+    .build()
 private val tableName: String by lazy { System.getenv("TABLE_NAME") ?: error("TABLE_NAME environment variable is required") }
 
 @Suppress("UNCHECKED_CAST")
@@ -16,6 +21,11 @@ private val deviceRegistry: Map<String, Any?> by lazy {
 }
 
 class GetDeviceMetadataHandler : RequestHandler<Map<String, Any?>, Map<String, Any?>> {
+    init {
+        dynamo
+        warmJson()
+    }
+
     override fun handleRequest(event: Map<String, Any?>, context: Context): Map<String, Any?> {
         @Suppress("UNCHECKED_CAST")
         val query = event["queryStringParameters"] as? Map<String, Any?>

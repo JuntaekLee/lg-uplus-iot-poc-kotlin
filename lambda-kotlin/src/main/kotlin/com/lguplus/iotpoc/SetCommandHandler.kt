@@ -6,6 +6,10 @@ import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.services.iotdataplane.model.UpdateThingShadowRequest
 
 class SetCommandHandler : RequestHandler<Map<String, Any?>, Map<String, Any?>> {
+    init {
+        IotClientFactory.warmUp()
+    }
+
     override fun handleRequest(event: Map<String, Any?>, context: Context): Map<String, Any?> {
         val rawBody = event["body"] as? String
         @Suppress("UNCHECKED_CAST")

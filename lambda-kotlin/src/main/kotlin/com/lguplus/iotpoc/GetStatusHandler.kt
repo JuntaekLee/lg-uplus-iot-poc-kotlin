@@ -6,6 +6,10 @@ import software.amazon.awssdk.services.iotdataplane.model.GetThingShadowRequest
 import software.amazon.awssdk.services.iotdataplane.model.ResourceNotFoundException
 
 class GetStatusHandler : RequestHandler<Map<String, Any?>, Map<String, Any?>> {
+    init {
+        IotClientFactory.warmUp()
+    }
+
     override fun handleRequest(event: Map<String, Any?>, context: Context): Map<String, Any?> {
         @Suppress("UNCHECKED_CAST")
         val query = event["queryStringParameters"] as? Map<String, Any?>

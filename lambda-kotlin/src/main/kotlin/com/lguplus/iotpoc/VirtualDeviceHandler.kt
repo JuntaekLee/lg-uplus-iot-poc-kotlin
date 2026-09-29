@@ -18,6 +18,10 @@ private val defaultIsOn = mapOf(
 )
 
 class VirtualDeviceHandler : RequestHandler<Map<String, Any?>, Map<String, Any?>> {
+    init {
+        IotClientFactory.warmUp()
+    }
+
     override fun handleRequest(event: Map<String, Any?>, context: Context): Map<String, Any?> {
         val thingName = event["thing_name"] as String
         val telemetryTopic = event["telemetry_topic"] as String

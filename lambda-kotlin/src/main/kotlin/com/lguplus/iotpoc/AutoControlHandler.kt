@@ -6,6 +6,10 @@ import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.services.iotdataplane.model.UpdateThingShadowRequest
 
 class AutoControlHandler : RequestHandler<Map<String, Any?>, Map<String, Any?>> {
+    init {
+        IotClientFactory.warmUp()
+    }
+
     override fun handleRequest(event: Map<String, Any?>, context: Context): Map<String, Any?> {
         // IoT Rule(overheat_control.tf)이 SQL SELECT에서 이 페이로드를 직접 만들어 호출한다:
         // {is_on, reason, device_id}. device_id는 지금은 기기가 하나뿐이라 안 쓰지만,

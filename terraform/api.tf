@@ -19,7 +19,7 @@ resource "aws_apigatewayv2_stage" "default" {
 resource "aws_apigatewayv2_integration" "get_status" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "AWS_PROXY"
-  integration_uri        = aws_lambda_function.get_status.invoke_arn
+  integration_uri        = aws_lambda_alias.get_status.invoke_arn
   payload_format_version = "2.0"
 }
 
@@ -33,6 +33,7 @@ resource "aws_lambda_permission" "apigw_get_status" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.get_status.function_name
+  qualifier     = aws_lambda_alias.get_status.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
@@ -41,7 +42,7 @@ resource "aws_lambda_permission" "apigw_get_status" {
 resource "aws_apigatewayv2_integration" "set_command" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "AWS_PROXY"
-  integration_uri        = aws_lambda_function.set_command.invoke_arn
+  integration_uri        = aws_lambda_alias.set_command.invoke_arn
   payload_format_version = "2.0"
 }
 
@@ -55,6 +56,7 @@ resource "aws_lambda_permission" "apigw_set_command" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.set_command.function_name
+  qualifier     = aws_lambda_alias.set_command.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
@@ -63,7 +65,7 @@ resource "aws_lambda_permission" "apigw_set_command" {
 resource "aws_apigatewayv2_integration" "get_device_metadata" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "AWS_PROXY"
-  integration_uri        = aws_lambda_function.get_device_metadata.invoke_arn
+  integration_uri        = aws_lambda_alias.get_device_metadata.invoke_arn
   payload_format_version = "2.0"
 }
 
@@ -77,6 +79,7 @@ resource "aws_lambda_permission" "apigw_get_device_metadata" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.get_device_metadata.function_name
+  qualifier     = aws_lambda_alias.get_device_metadata.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }

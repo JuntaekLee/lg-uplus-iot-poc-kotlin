@@ -17,9 +17,15 @@ dependencies {
     implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
     implementation("software.amazon.awssdk:iotdataplane:$awsSdkVersion")
     implementation("software.amazon.awssdk:dynamodb:$awsSdkVersion")
+    implementation("software.amazon.awssdk:url-connection-client:$awsSdkVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
     testImplementation(kotlin("test"))
+}
+
+configurations.all {
+    exclude(group = "software.amazon.awssdk", module = "apache-client")
+    exclude(group = "software.amazon.awssdk", module = "netty-nio-client")
 }
 
 kotlin {

@@ -17,7 +17,7 @@ resource "aws_lambda_function" "auto_control" {
   filename         = local.lambda_jar_path
   source_code_hash = local.lambda_jar_hash
   timeout          = 10
-  memory_size      = 512
+  memory_size      = 1769
 
   environment {
     variables = {
